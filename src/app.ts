@@ -5,7 +5,10 @@ import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
+const corsOptions = {
+    origin: '*'
 
+  }
 
 
 const app = express();
@@ -13,8 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 const http = createServer();
-const io = new Server(http, {});
-
+const io = new Server(http, {cors: cors(corsOptions)});
 
 io.on("connection", function(socket) {
     console.log("socket connected");
