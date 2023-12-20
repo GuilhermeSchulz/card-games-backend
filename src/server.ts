@@ -1,5 +1,5 @@
 import {app, http} from "./app";
-import AppDataSource from "./data-source";
+import {AppDataSource} from "./data-source";
 
 (async () => {
 
