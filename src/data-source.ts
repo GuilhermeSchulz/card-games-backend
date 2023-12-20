@@ -1,24 +1,22 @@
-import { DataSource, DataSourceOptions } from "typeorm";
-import path from "path";
 import "dotenv/config";
+import path from "path";
+import "reflect-metadata";
+import { DataSource, DataSourceOptions } from "typeorm";
 
-const setDataSourceConfig = (): DataSourceOptions => {
-  const entitiesPath: string = path.join(__dirname, "./entities/**.{js,ts}");
+const dataSourceConfig = (): DataSourceOptions => {
+  const entitiesPath: string = path.join(__dirname, "./entities/**.{ts,js}");
   const migrationsPath: string = path.join(
     __dirname,
-    "./migrations/**.{js,ts}"
+    "./migrations/**.{ts,js}"
   );
 
-  const nodeEnv = process.env.NODE_ENV;
+  const dbUrl: string | undefined = process.env.DATABASE_URL;
 
-  if (nodeEnv === "production") {
-    return {
-      type: "postgres",
-      url: process.env.DATABASE_URL,
-      entities: [entitiesPath],
-      migrations: [migrationsPath],
-    };
+  if (!dbUrl) {
+    throw new Error("Env var DATABASE_URL does not exists");
   }
+
+  const nodeEnv: string | undefined = process.env.NODE_ENV;
 
   if (nodeEnv === "test") {
     return {
@@ -28,14 +26,20 @@ const setDataSourceConfig = (): DataSourceOptions => {
       entities: [entitiesPath],
     };
   }
-  
+
   return {
     type: "postgres",
-    url: process.env.DATABASE_URL,
-    entities: [entitiesPath],
+    url: dbUrl,
+    synchronize: false,
+    logging: true,
     migrations: [migrationsPath],
+    entities: [entitiesPath],
   };
 };
 
-const dataSourceConfig = setDataSourceConfig();
-export default new DataSource(dataSourceConfig);
+const AppDataSource = new DataSource(dataSourceConfig());
+//npm run typeorm migration:generate ./src/migrations/InitialMigration -- -d ./src/data-source.ts
+//npm run typeorm migration:run -- -d ./src/data-source
+//to vercel yarn build
+
+export { AppDataSource };
