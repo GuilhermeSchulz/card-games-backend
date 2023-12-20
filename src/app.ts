@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 const http = createServer();
-const io = new Server(http, {cors: cors(corsOptions)});
+const io = new Server(http, {cors: corsOptions});
 
 io.on("connection", function(socket) {
     console.log("socket connected");
