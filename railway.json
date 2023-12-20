@@ -2,11 +2,18 @@
     "$schema": "https://railway.app/railway.schema.json",
     "build": {
       "builder": "NIXPACKS",
+      "nixpacksPlan": {
+        "phases": {
+          "install": {
+            "cmds": ["npm ci --omit=dev"]
+          }
+        }
+      },
       "buildCommand": "npm run build"
     },
     "deploy": {
       "numReplicas": 1,
-      "startCommand": "npm install --omit=dev && npm run migration:prod  && npm run start ",
+      "startCommand": "npm install && npm run migration:prod  && npm run start ",
       "restartPolicyType": "ON_FAILURE",
       "restartPolicyMaxRetries": 10
     }
