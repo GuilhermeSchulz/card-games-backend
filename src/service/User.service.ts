@@ -71,11 +71,22 @@ export async function getUserService(userData:IUserInfos){
             email: userData.email
         },
         relations: {decks:true}
-    })
-    console.log(user)
+    })  
     if(!user){
         throw new AppError('User not found', 404)
     }
     return userSerializer.strip().parse(user)
 
+}
+export async function deleteUserService(id:string){
+    const userRepository = AppDataSource.getRepository(User)
+    const userFind = await userRepository.findOneBy({
+        id:id
+    })
+    if(!userFind){
+        throw new AppError('User not found', 404)
+
+    }
+    await userRepository.delete(userFind.id)
+    return ('User deleted succefull')
 }
