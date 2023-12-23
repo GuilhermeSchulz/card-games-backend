@@ -2,8 +2,8 @@ import { compare } from "bcryptjs"
 import { AppDataSource } from "../data-source"
 import { User } from "../entities/User.entity"
 import { AppError } from "../error/AppError"
-import { ILogin, IUser } from "../interfaces/user.interface"
-import { userWithoutPasswordSerializer } from "../interfaces/user.serializer"
+import { ILogin, IUser, IUserInfos } from "../interfaces/user.interface"
+import { userSerializer, userWithoutDecks, userWithoutPasswordSerializer } from "../interfaces/user.serializer"
 import jwt from "jsonwebtoken";
 
 export async function createUser(userData: IUser){
@@ -51,4 +51,31 @@ export async function createSessionService(userData: ILogin){
     );
   
     return token;
+}
+export async function editUserService(id: string, userData: IUser){
+    const userRepository = AppDataSource.getRepository(User)
+    const user = await userRepository.findOneBy({
+        id: id
+    })
+    if(!user){
+        throw new AppError('User not found', 404)
+    }
+    await userRepository.update(id, userData)
+    return userWithoutDecks.strip().parse(user)
+}
+export async function getUserService(userData:IUserInfos){
+    const userRepository = AppDataSource.getRepository(User)
+    const user = await userRepository.findOne({
+        where:{
+
+            email: userData.email
+        },
+        relations: {decks:true}
+    })
+    console.log(user)
+    if(!user){
+        throw new AppError('User not found', 404)
+    }
+    return userSerializer.strip().parse(user)
+
 }
