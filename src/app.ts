@@ -5,6 +5,7 @@ import cors from "cors";
 import { userRouter } from "./routes/User.routes";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { cardRouter } from "./routes/Card.routes";
 const corsOptions = {
     origin: '*'
   }
@@ -14,6 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use('/user', userRouter)
+app.use('/cards', cardRouter)
 const http = createServer();
 const io = new Server(http, {cors: corsOptions});
 
