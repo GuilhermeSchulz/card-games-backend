@@ -10,7 +10,7 @@ export class Decks {
     name: string
     @ManyToOne(() => User, (user) => user.decks)
     user: User
-    @ManyToMany(() => Card)
+    @ManyToMany(() => Card, {eager: true})
     @JoinTable()
     card:Card[]
 }

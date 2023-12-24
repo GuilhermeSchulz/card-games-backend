@@ -83,6 +83,8 @@ export async function getUserService(userData:IUserInfos){
     if(!user){
         throw new AppError('User not found', 404)
     }
+    delete user.password
+    return user
     return userSerializer.strip().parse(user)
 
 }

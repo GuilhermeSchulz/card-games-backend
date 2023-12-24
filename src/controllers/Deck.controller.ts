@@ -16,6 +16,7 @@ export async function getSpecificDeckController(req: Request, res: Response) {
 }
 export async function getAllDecksController(req: Request, res: Response) {
     const userId = req.user.id
+    console.log(userId)
     const decks = await getAllDecks(userId)
     return res.status(200).json(decks)
 }

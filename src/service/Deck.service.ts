@@ -44,15 +44,23 @@ export async function getDeck(deckId:string) {
     if(!foundDeck){
         throw new AppError("Deck not found",404)
     }
+    delete foundDeck.user
     return foundDeck
 }
 export async function getAllDecks(userId: string) {
     const deckRepository = AppDataSource.getRepository(Decks)
     const userRepository = AppDataSource.getRepository(User)
-    const user = await userRepository.findOneBy({id: userId})
-    const foundDecks = await deckRepository.find({where: {user:{
-        id:user.id
-    } }, relations:{user:true,card:true}})
+
+    const findUser = await userRepository.findOneBy({id: userId})
+    const foundDecks = await deckRepository.find({
+        where:{
+            user: {
+                id: userId
+            }
+        }
+    })
+   
+
     return foundDecks
 }
 export async function deleteDeck(deckId:string) {
@@ -91,6 +99,6 @@ export async function updateDeck(userId: string, deckId:string, deckData:IDecks)
         user:{...test.user},
         cards:[...test.card.map(card => {return {...card}})]
     }
-    const foundDeck = await deckRepository.findOne({where:{ id: deck.id}, relations:{user:true,card:true}})
+    const foundDeck = await deckRepository.findOne({where:{ id: deck.id}, relations:{card:true}})
     return foundDeck
 }
