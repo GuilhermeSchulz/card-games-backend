@@ -1,4 +1,4 @@
-import { compare } from "bcryptjs"
+import { compare, hashSync } from "bcryptjs"
 import { AppDataSource } from "../data-source"
 import { User } from "../entities/User.entity"
 import { AppError } from "../error/AppError"
@@ -60,7 +60,15 @@ export async function editUserService(id: string, userData: IUser){
     if(!user){
         throw new AppError('User not found', 404)
     }
-    await userRepository.update(id, userData)
+    if (userData?.password) {
+        userData.password = hashSync(userData.password, 10);
+      }
+      const newObj = {
+        ...user,
+        ...userData,
+      };
+    
+    await userRepository.update(id, newObj)
     return userWithoutDecks.strip().parse(user)
 }
 export async function getUserService(userData:IUserInfos){
