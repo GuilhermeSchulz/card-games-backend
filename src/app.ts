@@ -6,6 +6,7 @@ import { userRouter } from "./routes/User.routes";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { cardRouter } from "./routes/Card.routes";
+import { deckRouter } from "./routes/Deck.routes";
 const corsOptions = {
     origin: '*'
   }
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cors());
 app.use('/user', userRouter)
 app.use('/cards', cardRouter)
+app.use('/deck', deckRouter)
 const http = createServer();
 const io = new Server(http, {cors: corsOptions});
 
