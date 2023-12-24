@@ -4,7 +4,8 @@ import { ICardData } from "../interfaces/cards.interface";
 
 export async function createCardService(cardData: ICardData){
     const cardRepository = AppDataSource.getRepository(Card)
-    const card = cardRepository.findOneBy({name: cardData.name})
+    const card = await cardRepository.findOneBy({name: cardData.name})
+
     if(card){
         throw new Error("Card already exists")
     }
@@ -27,7 +28,8 @@ export async function editCardService(id:string, cardData:ICardData){
         throw new Error("Card not found")
     }
     await cardRepository.update(id, cardData)
-    return card
+    const newCard = {...card, ...cardData}
+    return newCard
 }
 export async function deleteCardService(id:string){
     const cardRepository = AppDataSource.getRepository(Card)
