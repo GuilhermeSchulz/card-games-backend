@@ -9,5 +9,5 @@ import { AppDataSource } from "./data-source";
   app.listen(process.env.PORT, () => {
     console.log("Servidor executando");
   });
-  http.listen(3001, () => console.log("listening on http://localhost:3001"));
+  http.listen(3000, () => console.log("listening on http://localhost:3000"));
 })();

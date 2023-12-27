@@ -25,6 +25,6 @@ export class User{
     hashPassword(){
         this.password = hashSync(this.password, 10)
     }
-    @OneToMany(() => Decks, (decks)=> decks.user)
+    @OneToMany(() => Decks, (decks)=> decks.user, { eager: true })
     decks: Decks[]
 }

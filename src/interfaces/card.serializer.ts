@@ -6,3 +6,4 @@ export const cardSerializer = z.object({
     defense: z.number(),
     image: z.string()
 })
+export const cardTOReturn = cardSerializer.extend({id: z.string()})
